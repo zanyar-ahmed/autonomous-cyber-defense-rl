@@ -33,7 +33,7 @@ removes Paper 1's main caveat (results were in our own simulator).
 | 1 | Install CAGE 2; run a **random** defender for one episode; print reward | **DONE** — random vs B-line = **−46.80** / 30 steps (CybORG 2.1, obs=52, actions=145) |
 | 2 | Google Drive checkpointing / auto-resume after Colab disconnect | **ready to run** — `resumable_ppo_train` + CartPole demo |
 | 3 | Agents: tuned heuristic (primary), PPO, A2C/DQN, (champion if runnable) | **RL agents ready** — gymnasium bridge + smoke test + PPO/A2C/DQN trainer (heuristic baseline lands in Stage 4 eval) |
-| 4 | Evaluate vs progressively stronger attackers (B-line, Meander, …) | not started |
+| 4 | Evaluate vs progressively stronger attackers (B-line, Meander, …) | **harness ready** — tuned-heuristic baseline + RL-vs-heuristic eval (`stage4_*`) |
 | 5 | 10–15 seeds; mean/SD/95% CI/Wilcoxon/Cohen's d/Holm | not started |
 | 6 | Reproducibility: CSV+JSON+plots+config+seed+timestamp per run | not started |
 | 7 | Analysis: learning curves, reward distributions, effect sizes | not started |
