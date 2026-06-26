@@ -45,17 +45,28 @@ def _save_meta(run_dir, **kw):
         json.dump(kw, f, indent=2)
 
 
-def resumable_ppo_train(make_env, total_timesteps, run_dir,
-                        save_every=5000, seed=0, ppo_kwargs=None, verbose=0):
+def _algo_cls(algo):
+    """Map a name to an SB3 algorithm class (imported lazily)."""
+    from stable_baselines3 import PPO, A2C, DQN
+    table = {"PPO": PPO, "A2C": A2C, "DQN": DQN}
+    key = algo.upper()
+    if key not in table:
+        raise ValueError(f"algo must be one of {list(table)}, got {algo!r}")
+    return table[key]
+
+
+def resumable_train(make_env, total_timesteps, run_dir, algo="PPO",
+                    save_every=5000, seed=0, policy="MlpPolicy",
+                    algo_kwargs=None, verbose=0):
     """
-    Train a PPO agent to `total_timesteps`, checkpointing to `run_dir` (a Google
-    Drive path) every `save_every` steps, resuming automatically if checkpoints
-    already exist there.
+    Train an SB3 agent (PPO / A2C / DQN) to `total_timesteps`, checkpointing to
+    `run_dir` (a Google Drive path) every `save_every` steps, resuming
+    automatically if checkpoints already exist there.
 
     make_env : zero-arg callable returning a fresh (gymnasium) environment.
     Returns the trained SB3 model.
     """
-    from stable_baselines3 import PPO
+    AlgoCls = _algo_cls(algo)
 
     os.makedirs(run_dir, exist_ok=True)
     env = make_env()
@@ -63,13 +74,13 @@ def resumable_ppo_train(make_env, total_timesteps, run_dir,
     latest, done_steps = find_latest_checkpoint(run_dir)
     if latest is None:
         print(f"[ckpt] no checkpoint in {run_dir}\n[ckpt] -> starting FRESH "
-              f"(target {total_timesteps} steps, seed {seed})")
-        model = PPO("MlpPolicy", env, seed=seed, verbose=verbose, **(ppo_kwargs or {}))
+              f"({algo} target {total_timesteps} steps, seed {seed})")
+        model = AlgoCls(policy, env, seed=seed, verbose=verbose, **(algo_kwargs or {}))
         first_call = True
     else:
-        print(f"[ckpt] found {os.path.basename(latest)}\n[ckpt] -> RESUMING from "
+        print(f"[ckpt] found {os.path.basename(latest)}\n[ckpt] -> RESUMING {algo} from "
               f"{done_steps}/{total_timesteps} steps")
-        model = PPO.load(latest, env=env)
+        model = AlgoCls.load(latest, env=env)
         first_call = False
 
     if model.num_timesteps >= total_timesteps:
@@ -90,3 +101,8 @@ def resumable_ppo_train(make_env, total_timesteps, run_dir,
 
     print(f"[ckpt] training COMPLETE at {model.num_timesteps} steps.")
     return model
+
+
+def resumable_ppo_train(make_env, total_timesteps, run_dir, **kw):
+    """Backward-compatible PPO wrapper (used by the Stage 2 demo)."""
+    return resumable_train(make_env, total_timesteps, run_dir, algo="PPO", **kw)
