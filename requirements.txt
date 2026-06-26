@@ -23,3 +23,9 @@ paramiko
 pyyaml
 prettytable
 docutils
+
+# --- RL training (Stage 2 onward) ---
+# SB3 v2 trains through the modern gymnasium API (NOT old gym). For CybORG we wrap
+# its old-gym env in a gymnasium adapter (scripts/cyborg_gym.py, Stage 3).
+stable-baselines3==2.3.2
+# gymnasium is provided by Colab; SB3 2.3.2 pulls a compatible version if absent.
