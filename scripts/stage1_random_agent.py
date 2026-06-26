@@ -15,7 +15,22 @@ Run (after installing CAGE 2 -- see ../README.md):
 """
 import argparse
 import inspect
+import os
 import random
+import sys
+
+# CybORG 2.1 is pure-Python. We use it straight from the cloned CAGE 2 repo
+# WITHOUT pip-installing it (its setup.py egg_info breaks on modern pip). We just
+# put the repo's package directory on sys.path. Override with CYBORG_PATH if needed.
+for _p in (
+    os.environ.get("CYBORG_PATH", ""),
+    "cage-challenge-2/CybORG",
+    "/content/cage-challenge-2/CybORG",
+    os.path.expanduser("~/cage-challenge-2/CybORG"),
+):
+    if _p and os.path.isdir(os.path.join(_p, "CybORG")) and _p not in sys.path:
+        sys.path.insert(0, _p)
+        break
 
 import numpy as np
 

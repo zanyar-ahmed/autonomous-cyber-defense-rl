@@ -11,31 +11,34 @@ Goal: install CAGE Challenge 2 and prove it runs by playing **one episode** with
 ## Cell 1 — install (run it, then RESTART the runtime when it finishes)
 
 ```python
-# clone the official benchmark
-!git clone https://github.com/cage-challenge/cage-challenge-2.git
+import os
+# clone the official benchmark (skip if it is already there)
+if not os.path.isdir("cage-challenge-2"):
+    !git clone https://github.com/cage-challenge/cage-challenge-2.git
 
-# old-API gym (<0.26) that installs CLEANLY + a numpy with a wheel for Colab.
-# (gym 0.21.0 fails to build on modern pip; 0.23.1 has the same old API and works.
-#  CybORG 2.1 uses no removed numpy aliases, so numpy 1.26.4 is fine.)
-%pip install -q "gym==0.23.1" "numpy==1.26.4"
-
-# install CybORG with --no-deps so pip cannot pull a too-new gym back in,
-# then add CybORG's remaining runtime dependencies explicitly
-%pip install -q --no-deps -e cage-challenge-2/CybORG
-%pip install -q paramiko pyyaml prettytable docutils
+# Install ONLY the libraries CybORG needs. We do NOT pip-install CybORG itself:
+# it is pure-Python and its setup.py breaks on modern pip, so Cell 2 just adds it
+# to the Python path instead.
+#   * gym 0.23.1 = old 4-tuple API (CybORG needs <0.26) and installs cleanly
+#     (gym 0.21.0 fails to build).
+#   * numpy 1.26.4 has a Colab wheel; CybORG uses no removed numpy aliases.
+%pip install -q "gym==0.23.1" "numpy==1.26.4" paramiko pyyaml prettytable docutils
 
 print("install finished — now click Runtime ▸ Restart runtime, then run Cell 2")
 ```
 
 **After Cell 1, do `Runtime ▸ Restart runtime`** (the numpy change needs a
-restart). Do **not** re-run Cell 1 after restarting — go straight to Cell 2.
+restart). The cloned repo and installed packages survive the restart — go
+straight to Cell 2. *(The `numpy>=2` lines pip prints are harmless warnings from
+Colab's preinstalled opencv/jax, which CAGE 2 does not use.)*
 
 ---
 
 ## Cell 2 — verify (the actual Stage 1 check)
 
 ```python
-import inspect, random
+import sys, inspect, random
+sys.path.insert(0, "/content/cage-challenge-2/CybORG")   # use CybORG without installing it
 import numpy as np
 from CybORG import CybORG, CYBORG_VERSION
 from CybORG.Agents import B_lineAgent

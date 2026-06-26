@@ -1,9 +1,9 @@
 # ============================================================================
 # Paper 2 -- CAGE Challenge 2 (CybORG v2.1) pinned environment.
-# CybORG is VERSION-SENSITIVE; install order matters (see STAGE1_RUN_ON_COLAB.md).
-# CybORG itself is installed EDITABLE from the cloned repo, with --no-deps so pip
-# cannot replace these pins:
-#     pip install --no-deps -e cage-challenge-2/CybORG
+# CybORG is VERSION-SENSITIVE. We do NOT pip-install CybORG: it is pure-Python and
+# its setup.py egg_info breaks on modern pip. Instead we clone the CAGE 2 repo and
+# add it to sys.path at run time (see STAGE1_RUN_ON_COLAB.md / scripts). This file
+# pins only the libraries CybORG imports.
 # ----------------------------------------------------------------------------
 # Why these exact versions:
 #   * gym is UNPINNED upstream -> pip would grab gym>=0.26 whose 5-tuple step API
