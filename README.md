@@ -30,7 +30,7 @@ removes Paper 1's main caveat (results were in our own simulator).
 
 | Stage | What | State |
 |------|------|-------|
-| 1 | Install CAGE 2; run a **random** defender for one episode; print reward | **ready to run on Colab** |
+| 1 | Install CAGE 2; run a **random** defender for one episode; print reward | **DONE** — random vs B-line = **−46.80** / 30 steps (CybORG 2.1, obs=52, actions=145) |
 | 2 | Google Drive checkpointing / auto-resume after Colab disconnect | not started |
 | 3 | Agents: tuned heuristic (primary), PPO, A2C/DQN, (champion if runnable) | not started |
 | 4 | Evaluate vs progressively stronger attackers (B-line, Meander, …) | not started |

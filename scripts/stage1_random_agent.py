@@ -79,7 +79,8 @@ def main():
     env = ChallengeWrapper(env=cyborg, agent_name="Blue")
     env.action_space.seed(args.seed)          # make the random defender reproducible
 
-    obs = env.reset()
+    reset_out = env.reset()
+    obs = reset_out[0] if isinstance(reset_out, tuple) else reset_out  # gym/gymnasium
     print(f"reset OK   -> observation vector length = {len(obs)}")
     print(f"action OK  -> blue action-space size    = {env.action_space.n}")
     print("-" * 64)
@@ -87,8 +88,15 @@ def main():
     total_reward = 0.0
     for _ in range(args.steps):
         action = env.action_space.sample()    # random defender action
-        obs, reward, done, info = env.step(action)
+        step_out = env.step(action)
+        if len(step_out) == 5:                 # gymnasium 5-tuple
+            obs, reward, terminated, truncated, info = step_out
+            done = terminated or truncated
+        else:                                  # old gym 4-tuple (CybORG default)
+            obs, reward, done, info = step_out
         total_reward += reward
+        if done:
+            break
 
     print("Episode finished WITHOUT errors.")
     print(f"TOTAL REWARD (random defender vs {red_cls.__name__}) = {total_reward:.2f}")
