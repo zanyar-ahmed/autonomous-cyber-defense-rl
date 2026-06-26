@@ -34,7 +34,7 @@ removes Paper 1's main caveat (results were in our own simulator).
 | 2 | Google Drive checkpointing / auto-resume after Colab disconnect | **ready to run** — `resumable_ppo_train` + CartPole demo |
 | 3 | Agents: tuned heuristic (primary), PPO, A2C/DQN, (champion if runnable) | **RL agents ready** — gymnasium bridge + smoke test + PPO/A2C/DQN trainer (heuristic baseline lands in Stage 4 eval) |
 | 4 | Evaluate vs progressively stronger attackers (B-line, Meander, …) | **harness ready** — tuned-heuristic baseline + RL-vs-heuristic eval (`stage4_*`) |
-| 5 | 10–15 seeds; mean/SD/95% CI/Wilcoxon/Cohen's d/Holm | not started |
+| 5 | 10–15 seeds; mean/SD/95% CI/Wilcoxon/Cohen's d/Holm | **ready** — `stage5_seeds.py` (multi-seed train+eval+stats vs heuristic) |
 | 6 | Reproducibility: CSV+JSON+plots+config+seed+timestamp per run | not started |
 | 7 | Analysis: learning curves, reward distributions, effect sizes | not started |
 
