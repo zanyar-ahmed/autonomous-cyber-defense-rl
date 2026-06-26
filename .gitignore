@@ -1,0 +1,19 @@
+# Local planning / strategy notes (kept off the public repo)
+PROJECT_BRIEF_paper2.md
+PAPER2_IDEAS.md
+
+# Upstream benchmark — installed via pip on Colab, not committed here
+cage-challenge-2/
+
+# Python / virtualenv / OS junk
+__pycache__/
+*.pyc
+.venv/
+venv/
+.ipynb_checkpoints/
+.DS_Store
+
+# Large binaries (live in Drive, not git)
+*.zip
+*.pdf
+*.docx
