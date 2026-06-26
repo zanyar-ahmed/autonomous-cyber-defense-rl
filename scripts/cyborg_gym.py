@@ -18,17 +18,26 @@ import inspect
 import os
 import sys
 
-# --- Python 3.12 shim: old gym 0.23.1 does `import distutils`, but Python 3.12
-# removed distutils from the stdlib. setuptools (<81) still ships it, so importing
-# setuptools first registers the finder that makes `import distutils` work again.
+# --- Python 3.12 shim: old gym 0.23.1 does `import distutils.spawn`, but Python
+# 3.12 removed distutils from the stdlib. We try the real module, then setuptools'
+# copy, and finally fall back to a MINIMAL self-contained stub of the only thing
+# gym actually uses (distutils.spawn.find_executable). This needs no setuptools and
+# no runtime restart.
+import types as _types
 try:
-    import distutils  # noqa: F401
+    import distutils.spawn  # noqa: F401  (real distutils, Python < 3.12)
 except ModuleNotFoundError:
     try:
-        import setuptools  # noqa: F401  (registers setuptools._distutils as distutils)
-        import distutils  # noqa: F401
+        import setuptools  # noqa: F401  (may register setuptools._distutils)
+        import distutils.spawn  # noqa: F401
     except Exception:
-        pass
+        import shutil as _shutil
+        _d = _types.ModuleType("distutils")
+        _spawn = _types.ModuleType("distutils.spawn")
+        _spawn.find_executable = _shutil.which       # the only function gym needs
+        _d.spawn = _spawn
+        sys.modules.setdefault("distutils", _d)
+        sys.modules["distutils.spawn"] = _spawn
 
 # locate the cloned CybORG (pure-Python, used via sys.path -- see Stage 1)
 for _p in (
