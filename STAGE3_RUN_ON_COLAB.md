@@ -12,12 +12,18 @@ the RL challengers (PPO / A2C / DQN) on CAGE 2, checkpointing to Google Drive.
 
 ```python
 import os
-if not os.path.isdir("autonomous-cyber-defense-rl"):
+# always refresh our repo so you get the latest scripts (the isdir guard only
+# clones the first time, which leaves a stale copy)
+if os.path.isdir("autonomous-cyber-defense-rl"):
+    !cd autonomous-cyber-defense-rl && git pull -q
+else:
     !git clone https://github.com/zanyar-ahmed/autonomous-cyber-defense-rl.git
 if not os.path.isdir("cage-challenge-2"):
     !git clone https://github.com/cage-challenge/cage-challenge-2.git
 %pip install -q "gym==0.23.1" "numpy==1.26.4" paramiko pyyaml prettytable docutils
 %pip install -q "stable-baselines3==2.3.2"
+# Python 3.12 removed distutils, but old gym needs it -> setuptools<81 restores it
+%pip install -q "setuptools<81"
 print("installed — now Runtime ▸ Restart runtime, then run Cell 2")
 ```
 **Then `Runtime ▸ Restart runtime`.**

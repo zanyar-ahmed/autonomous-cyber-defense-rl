@@ -18,6 +18,18 @@ import inspect
 import os
 import sys
 
+# --- Python 3.12 shim: old gym 0.23.1 does `import distutils`, but Python 3.12
+# removed distutils from the stdlib. setuptools (<81) still ships it, so importing
+# setuptools first registers the finder that makes `import distutils` work again.
+try:
+    import distutils  # noqa: F401
+except ModuleNotFoundError:
+    try:
+        import setuptools  # noqa: F401  (registers setuptools._distutils as distutils)
+        import distutils  # noqa: F401
+    except Exception:
+        pass
+
 # locate the cloned CybORG (pure-Python, used via sys.path -- see Stage 1)
 for _p in (
     os.environ.get("CYBORG_PATH", ""),

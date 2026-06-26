@@ -17,6 +17,7 @@
 # ----------------------------------------------------------------------------
 gym==0.23.1
 numpy==1.26.4
+setuptools<81          # Python 3.12 removed stdlib distutils; gym 0.23.1 imports it
 
 # CybORG's own runtime deps (installed explicitly because we use --no-deps):
 paramiko
