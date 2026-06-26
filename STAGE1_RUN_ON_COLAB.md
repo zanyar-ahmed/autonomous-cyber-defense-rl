@@ -14,19 +14,20 @@ Goal: install CAGE Challenge 2 and prove it runs by playing **one episode** with
 # clone the official benchmark
 !git clone https://github.com/cage-challenge/cage-challenge-2.git
 
-# build tools that let the old gym 0.21 install on modern pip
-%pip install -q "setuptools==65.5.0" "wheel==0.38.4"
+# old-API gym (<0.26) that installs CLEANLY + a numpy with a wheel for Colab.
+# (gym 0.21.0 fails to build on modern pip; 0.23.1 has the same old API and works.
+#  CybORG 2.1 uses no removed numpy aliases, so numpy 1.26.4 is fine.)
+%pip install -q "gym==0.23.1" "numpy==1.26.4"
 
-# install CybORG (CAGE 2) in editable mode
-%pip install -q -e cage-challenge-2/CybORG
-
-# pin the two version-sensitive libraries (this is the part that usually breaks)
-%pip install -q "gym==0.21.0" "numpy==1.23.5"
+# install CybORG with --no-deps so pip cannot pull a too-new gym back in,
+# then add CybORG's remaining runtime dependencies explicitly
+%pip install -q --no-deps -e cage-challenge-2/CybORG
+%pip install -q paramiko pyyaml prettytable docutils
 
 print("install finished — now click Runtime ▸ Restart runtime, then run Cell 2")
 ```
 
-**After Cell 1, do `Runtime ▸ Restart runtime`** (the numpy downgrade needs a
+**After Cell 1, do `Runtime ▸ Restart runtime`** (the numpy change needs a
 restart). Do **not** re-run Cell 1 after restarting — go straight to Cell 2.
 
 ---

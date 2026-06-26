@@ -1,20 +1,24 @@
 # ============================================================================
 # Paper 2 -- CAGE Challenge 2 (CybORG v2.1) pinned environment.
-# CybORG is VERSION-SENSITIVE. Install order matters (see README.md).
-# CybORG itself is installed EDITABLE from the cloned repo, not by this file:
-#     pip install -e cage-challenge-2/CybORG
+# CybORG is VERSION-SENSITIVE; install order matters (see STAGE1_RUN_ON_COLAB.md).
+# CybORG itself is installed EDITABLE from the cloned repo, with --no-deps so pip
+# cannot replace these pins:
+#     pip install --no-deps -e cage-challenge-2/CybORG
 # ----------------------------------------------------------------------------
-# These pins fix the two classic CAGE 2 install traps:
-#   1. gym is UNPINNED upstream -> pip grabs a too-new gym whose API breaks
-#      CybORG's wrappers. We pin the challenge-era gym.
-#   2. numpy >= 1.24 removed np.float/np.bool aliases that CybORG 2.1 still uses.
+# Why these exact versions:
+#   * gym is UNPINNED upstream -> pip would grab gym>=0.26 whose 5-tuple step API
+#     breaks CybORG's wrappers. We need the OLD API, so gym < 0.26.
+#     gym 0.21.0 is the "challenge era" pin but FAILS to build on modern pip
+#     (metadata-generation-failed). gym 0.23.1 has the same old API AND a clean
+#     wheel -> use it.
+#   * CybORG 2.1 uses NO removed numpy aliases (np.float/np.bool), verified by
+#     grep, so it does NOT need numpy < 1.24. We use numpy 1.26.4 (has a wheel on
+#     Colab's Python; gym 0.23.1 + SB3 both need numpy < 2).
 # ----------------------------------------------------------------------------
-setuptools==65.5.0      # lets the old gym 0.21 build under modern pip
-wheel==0.38.4
-gym==0.21.0             # CAGE 2 era gym (old 4-tuple step API)
-numpy==1.23.5           # must be < 1.24 for CybORG 2.1
+gym==0.23.1
+numpy==1.26.4
 
-# CybORG's own declared deps (kept loose, as upstream):
+# CybORG's own runtime deps (installed explicitly because we use --no-deps):
 paramiko
 pyyaml
 prettytable
