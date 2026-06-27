@@ -1,0 +1,5 @@
+algo,red,seeds,baseline,rl_mean,ci_lo,ci_hi,delta,wins,t_p,wilcoxon_p,cohen_d,significant
+a2c,bline,5,-30.46,-53.11,-105.19,-1.03,-22.65,1,0.8531,0.8438,-0.54,False
+dqn,bline,5,-30.46,-32.25,-41.1,-23.4,-1.79,2,0.6975,0.7812,-0.25,False
+ppo,bline,5,-30.46,-17.21,-22.41,-12.01,13.25,5,0.0011,0.0312,3.17,True
+ppo,meander,5,-12.67,-9.83,-11.36,-8.31,2.83,5,0.0034,0.0312,2.3,True

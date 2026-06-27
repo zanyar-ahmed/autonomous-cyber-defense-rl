@@ -1,0 +1,3 @@
+{"config": {"algo": "a2c", "red": "bline", "steps": 30, "total": 50000, "seeds": 5, "episodes": 100, "baseline": "restore"},
+ "baseline_full": {"n": 100, "mean": -30.46, "ci95": 6.81},
+ "stats": {"n_seeds": 5, "rl_mean": -53.11, "rl_ci_lo": -105.19, "rl_ci_hi": -1.03, "baseline": -30.46, "delta": -22.65, "t_p": 0.8531, "wilcoxon_p": 0.8438, "cohen_d": -0.54, "wins": 1, "per_seed": [-43.12, -125.20, -15.02, -42.02, -40.19]}}

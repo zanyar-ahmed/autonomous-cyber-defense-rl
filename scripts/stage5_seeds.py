@@ -84,11 +84,19 @@ def main():
     print(f"VERDICT                        : {verdict}")
 
     out = {"config": vars(args), "baseline_full": base, "stats": res}
-    path = os.path.join(
-        args.out, f"stage5_{args.algo}_{args.red}_s{args.steps}.json")
+    fname = f"stage5_{args.algo}_{args.red}_s{args.steps}.json"
+    path = os.path.join(args.out, fname)
     with open(path, "w") as f:
         json.dump(out, f, indent=2)
     print(f"\nsaved {path}")
+
+    # also persist a copy to Drive so results survive Colab session resets
+    drive_results = os.path.join(os.path.dirname(args.drive_dir), "results")
+    if os.path.isdir("/content/drive/MyDrive"):
+        os.makedirs(drive_results, exist_ok=True)
+        with open(os.path.join(drive_results, fname), "w") as f:
+            json.dump(out, f, indent=2)
+        print(f"saved {os.path.join(drive_results, fname)} (persistent)")
 
 
 if __name__ == "__main__":
