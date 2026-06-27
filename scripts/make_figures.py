@@ -29,6 +29,7 @@ def load_runs(results_dirs):
             cfg, st = obj["config"], obj["stats"]
             runs.append({
                 "algo": cfg["algo"], "red": cfg["red"], "steps": cfg["steps"],
+                "total": cfg.get("total", 0),
                 "seeds": st["n_seeds"], "baseline": st["baseline"],
                 "rl_mean": st["rl_mean"], "ci_lo": st["rl_ci_lo"],
                 "ci_hi": st["rl_ci_hi"], "delta": st["delta"],
@@ -54,16 +55,16 @@ def main():
         raise SystemExit("No stage5_*.json found. Run Stage 5 first.")
 
     # ---- table ----
-    cols = ["algo", "red", "seeds", "baseline", "rl_mean", "ci_lo", "ci_hi",
+    cols = ["algo", "red", "total", "seeds", "baseline", "rl_mean", "ci_lo", "ci_hi",
             "delta", "wins", "t_p", "wilcoxon_p", "cohen_d", "significant"]
-    print(f"{'algo':5} {'attacker':8} {'RLmean':>8} {'base':>8} {'delta':>7} "
-          f"{'wins':>5} {'t_p':>7} {'d':>6}  verdict")
-    print("-" * 70)
-    for r in sorted(runs, key=lambda x: (x["red"], x["algo"])):
+    print(f"{'algo':5} {'attacker':8} {'steps':>8} {'RLmean':>8} {'base':>8} "
+          f"{'delta':>7} {'wins':>5} {'t_p':>7} {'d':>6}  verdict")
+    print("-" * 78)
+    for r in sorted(runs, key=lambda x: (x["red"], x["algo"], x["total"])):
         verdict = "WIN" if r["significant"] else "ns"
-        print(f"{r['algo']:5} {r['red']:8} {r['rl_mean']:8.2f} {r['baseline']:8.2f} "
-              f"{r['delta']:+7.2f} {r['wins']:>5} {r['t_p']:7.3f} {r['cohen_d']:6.2f}"
-              f"  {verdict}")
+        print(f"{r['algo']:5} {r['red']:8} {r['total']:8d} {r['rl_mean']:8.2f} "
+              f"{r['baseline']:8.2f} {r['delta']:+7.2f} {r['wins']:>5} "
+              f"{r['t_p']:7.3f} {r['cohen_d']:6.2f}  {verdict}")
     csv_path = os.path.join(args.tables, "summary.csv")
     with open(csv_path, "w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=cols)
@@ -77,8 +78,8 @@ def main():
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
-    runs_s = sorted(runs, key=lambda x: (x["red"], x["algo"]))
-    labels = [f"{r['algo'].upper()}\n{r['red']}" for r in runs_s]
+    runs_s = sorted(runs, key=lambda x: (x["red"], x["algo"], x["total"]))
+    labels = [f"{r['algo'].upper()}\n{r['red']}\n{r['total']//1000}k" for r in runs_s]
     means = [r["rl_mean"] for r in runs_s]
     lo = [r["rl_mean"] - r["ci_lo"] for r in runs_s]
     hi = [r["ci_hi"] - r["rl_mean"] for r in runs_s]

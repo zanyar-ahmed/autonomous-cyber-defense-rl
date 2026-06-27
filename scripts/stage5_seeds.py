@@ -84,7 +84,7 @@ def main():
     print(f"VERDICT                        : {verdict}")
 
     out = {"config": vars(args), "baseline_full": base, "stats": res}
-    fname = f"stage5_{args.algo}_{args.red}_s{args.steps}.json"
+    fname = f"stage5_{args.algo}_{args.red}_s{args.steps}_t{args.total}.json"
     path = os.path.join(args.out, fname)
     with open(path, "w") as f:
         json.dump(out, f, indent=2)
