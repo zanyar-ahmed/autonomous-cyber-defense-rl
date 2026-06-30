@@ -19,3 +19,7 @@ venv/
 *.zip
 *.pdf
 *.docx
+
+# Local-only review + reference working folders
+review/
+references_paper2/
